@@ -208,3 +208,50 @@ app.put("/rooms/:id", (req, res) => {
   });
 });
 
+// ============================================
+// DELETE /rooms/:id
+// Hapus kamar berdasarkan id
+// ============================================
+app.delete("/rooms/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = rooms.findIndex((r) => r.id === id);
+
+  // data tidak ditemukan -> 404
+  if (index === -1) {
+    return res.status(404).json({
+      status: "error",
+      message: `Data dengan id ${id} tidak ditemukan`,
+      data: null,
+    });
+  }
+
+  rooms.splice(index, 1);
+
+  // sukses -> 200 + data null + pesan menyebut id yang dihapus
+  res.status(200).json({
+    status: "success",
+    message: `Data kamar dengan id ${id} berhasil dihapus`,
+    data: null,
+  });
+});
+
+// ============================================
+// Middleware catch-all: endpoint tidak terdaftar
+// ============================================
+app.use((req, res) => {
+  res.status(404).json({
+    status: "error",
+    message: "Endpoint tidak ditemukan",
+    data: null,
+  });
+});
+
+// jalankan server di local;
+// di Vercel (production) file ini diekspor sebagai handler
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () =>
+    console.log(`Server berjalan di http://localhost:${PORT}`)
+  );
+}
+
+module.exports = app;
