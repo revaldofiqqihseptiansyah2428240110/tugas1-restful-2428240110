@@ -152,3 +152,59 @@ app.post("/rooms", (req, res) => {
   });
 });
 
+// ============================================
+// PUT /rooms/:id
+// Ubah seluruh field kamar (penggantian penuh)
+// Body: {"nomorKamar":"306","tipe":"deluxe","hargaPerMalam":900000,"kapasitas":3,"tersedia":true}
+// ============================================
+app.put("/rooms/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = rooms.findIndex((r) => r.id === id);
+
+  // data tidak ditemukan -> 404
+  if (index === -1) {
+    return res.status(404).json({
+      status: "error",
+      message: `Data dengan id ${id} tidak ditemukan`,
+      data: null,
+    });
+  }
+
+  const { nomorKamar, tipe, hargaPerMalam, kapasitas, tersedia } = req.body;
+
+  // validasi: semua field wajib (*) harus diisi -> 400 jika kosong
+  if (!nomorKamar || !tipe || hargaPerMalam === undefined || !kapasitas) {
+    return res.status(400).json({
+      status: "error",
+      message:
+        "Field nomorKamar, tipe, hargaPerMalam, dan kapasitas wajib diisi",
+      data: null,
+    });
+  }
+
+  // validasi: nilai tipe harus sesuai enum
+  if (!TIPE_VALID.includes(tipe)) {
+    return res.status(400).json({
+      status: "error",
+      message: "Field tipe harus berupa standar, deluxe, atau suite",
+      data: null,
+    });
+  }
+
+  // ganti seluruh field data
+  rooms[index] = {
+    id,
+    nomorKamar,
+    tipe,
+    hargaPerMalam,
+    kapasitas,
+    tersedia: tersedia !== undefined ? tersedia : true,
+  };
+
+  res.status(200).json({
+    status: "success",
+    message: "Data berhasil diubah",
+    data: rooms[index],
+  });
+});
+
