@@ -106,6 +106,49 @@ app.get("/rooms/:id", (req, res) => {
   res.status(200).json(room);
 });
 
+// ============================================
+// POST /rooms
+// Tambah kamar baru
+// Body: {"nomorKamar":"102","tipe":"standar","hargaPerMalam":350000,"kapasitas":2,"tersedia":true}
+// ============================================
+app.post("/rooms", (req, res) => {
+  const { nomorKamar, tipe, hargaPerMalam, kapasitas, tersedia } = req.body;
 
+  // validasi: semua field wajib (*) harus diisi -> 400 jika kosong
+  if (!nomorKamar || !tipe || hargaPerMalam === undefined || !kapasitas) {
+    return res.status(400).json({
+      status: "error",
+      message:
+        "Field nomorKamar, tipe, hargaPerMalam, dan kapasitas wajib diisi",
+      data: null,
+    });
+  }
 
-module.exports = app;
+  // validasi: nilai tipe harus sesuai enum
+  if (!TIPE_VALID.includes(tipe)) {
+    return res.status(400).json({
+      status: "error",
+      message: "Field tipe harus berupa standar, deluxe, atau suite",
+      data: null,
+    });
+  }
+
+  // buat data baru; id dibuat otomatis oleh server
+  const baru = {
+    id: nextId++,
+    nomorKamar,
+    tipe,
+    hargaPerMalam,
+    kapasitas,
+    tersedia: tersedia !== undefined ? tersedia : true,
+  };
+  rooms.push(baru);
+
+  // berhasil -> 201 + data yang baru dibuat
+  res.status(201).json({
+    status: "success",
+    message: "Data berhasil ditambahkan",
+    data: baru,
+  });
+});
+
