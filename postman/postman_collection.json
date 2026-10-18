@@ -1,0 +1,419 @@
+{
+	"info": {
+		"_postman_id": "09401fe9-5899-4273-af92-452c6e91885d",
+		"name": "Tugas-restful-Hotel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "58421813"
+	},
+	"item": [
+		{
+			"name": "GET Rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data kamar berbentuk array\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Setiap kamar memiliki field yang diperlukan\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    if (data.length > 0) {\r",
+							"        pm.expect(data[0]).to.have.property(\"id\");\r",
+							"        pm.expect(data[0]).to.have.property(\"nomorKamar\");\r",
+							"        pm.expect(data[0]).to.have.property(\"tipe\");\r",
+							"        pm.expect(data[0]).to.have.property(\"hargaPerMalam\");\r",
+							"        pm.expect(data[0]).to.have.property(\"kapasitas\");\r",
+							"        pm.expect(data[0]).to.have.property(\"tersedia\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/rooms",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Satu Rooms Parameter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data kamar memiliki ID\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data).to.have.property(\"id\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data kamar memiliki field lengkap\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    pm.expect(data).to.have.property(\"nomorKamar\");\r",
+							"    pm.expect(data).to.have.property(\"tipe\");\r",
+							"    pm.expect(data).to.have.property(\"hargaPerMalam\");\r",
+							"    pm.expect(data).to.have.property(\"kapasitas\");\r",
+							"    pm.expect(data).to.have.property(\"tersedia\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rooms/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Satu Rooms Qurey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa array\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Semua kamar sesuai tipe deluxe\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    pm.expect(data.length).to.be.greaterThan(0);\r",
+							"\r",
+							"    data.forEach(function (room) {\r",
+							"        pm.expect(room.tipe).to.eql(\"deluxe\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rooms?tipe=deluxe",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms"
+					],
+					"query": [
+						{
+							"key": "tipe",
+							"value": "deluxe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code harus 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status response adalah success\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data.status).to.eql(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data kamar berhasil dibuat\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    pm.expect(data.data).to.be.an(\"object\");\r",
+							"    pm.expect(data.data).to.have.property(\"id\");\r",
+							"    pm.expect(data.data.nomorKamar).to.eql(\"102\");\r",
+							"    pm.expect(data.data.tipe).to.eql(\"standar\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ID kamar tersimpan ke Environment\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    pm.expect(data.data.id).to.exist;\r",
+							"    pm.environment.set(\"room_id\", data.data.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nomorKamar\": \"102\",\r\n  \"tipe\": \"standar\",\r\n  \"hargaPerMalam\": 350000,\r\n  \"kapasitas\": 2,\r\n  \"tersedia\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rooms",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status response adalah success\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data.status).to.eql(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data kamar berhasil diubah\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"\r",
+							"    pm.expect(data.data).to.be.an(\"object\");\r",
+							"    pm.expect(data.data.id).to.eql(\r",
+							"        Number(pm.environment.get(\"room_id\"))\r",
+							"    );\r",
+							"    pm.expect(data.data.tipe).to.eql(\"deluxe\");\r",
+							"    pm.expect(data.data.hargaPerMalam).to.eql(500000);\r",
+							"    pm.expect(data.data.kapasitas).to.eql(3);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nomorKamar\": \"102\",\r\n  \"tipe\": \"deluxe\",\r\n  \"hargaPerMalam\": 500000,\r\n  \"kapasitas\": 3,\r\n  \"tersedia\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rooms/{{room_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms",
+						"{{room_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status response adalah success\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data.status).to.eql(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Pesan penghapusan sesuai\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data.message).to.include(\"dihapus\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data bernilai null setelah dihapus\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data).to.have.property(\"data\", null);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rooms/{{room_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms",
+						"{{room_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Info API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code harus 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response berupa JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Informasi API tersedia\", function () {\r",
+							"    const data = pm.response.json();\r",
+							"    pm.expect(data).to.be.an(\"object\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
